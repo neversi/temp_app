@@ -21,7 +21,7 @@ class Subject(Model):
         
 class Session(Model):
         subject: fields.ForeignKeyRelation[Subject] = fields.ForeignKeyField('models.Subject', related_name="sessions")
-        students: fields.ManyToManyRelation["Student"] = fields.ManyToManyField('models.Student', relatied_name='sessions', through='student_session')
+        students: fields.ManyToManyRelation["Student"] = fields.ManyToManyField('models.Student', related_name='sessions', through='student_session')
         proctors: fields.ManyToManyRelation["Proctor"] = fields.ManyToManyField('models.Proctor', related_name="sessions", through='proctor_session')
         scheduled = fields.DatetimeField(null=True, auto_now_add=True)
         reports: fields.ReverseRelation["Report"]
