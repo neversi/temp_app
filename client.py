@@ -2,7 +2,7 @@ import socketio
 
 sio = socketio.Client()
 sio.connect(
-    "http://localhost:8000/ws", socketio_path="/ws/socket.io"
+    "http://95.179.246.114:7500/ws", socketio_path="/ws/socket.io"
 )
 
 

@@ -45,6 +45,7 @@ httptools==0.1.1
 idna==2.10
 iniconfig==1.1.1
 iso8601==0.1.14
+kafka-python==2.0.2
 Keras-Preprocessing==1.1.2
 Mako==1.1.4
 Markdown==3.3.4
@@ -86,6 +87,7 @@ rsa==4.7.2
 Rx==1.6.1
 singledispatch==3.6.1
 six==1.15.0
+SQLAlchemy==1.4.11
 starlette==0.13.6
 termcolor==1.1.0
 toml==0.10.2

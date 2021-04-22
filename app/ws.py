@@ -1,7 +1,7 @@
 import socketio
 from .config import Config
 from json import dumps, loads, JSONEncoder, JSONDecoder
-from kafka import KafkaConsumer, KafkaProducer
+# from kafka import KafkaConsumer, KafkaProducer
 from .redis import redis_cache
 
 
