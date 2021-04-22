@@ -59,10 +59,23 @@ class CreateSessionIn(BaseModel):
 
 @router.post("/create")
 async def create_moodle_session(create_sesion_in: CreateSessionIn):
-        # session_obj = await Session.get_or_none(id=int(create_sesion_in.resource_id))
-        subject_obj = await Subject.create(id=int(create_sesion_in.course_id), name=create_sesion_in.course_title)
-        # if session_obj is None:
-        await Session.create(subject_id=int(create_sesion_in.course_id), id=int(create_sesion_in.resource_id))
-        await Student.create(id=int(create_sesion_in.user_id), email=create_sesion_in.user_full_name, password="null")
+        session_obj = await Session.get_or_none(id=int(create_sesion_in.resource_id))
+        (subject_obj, exists) = await Subject.get_or_create(id=int(create_sesion_in.course_id), name=create_sesion_in.course_title)
+        if session_obj is None:
+                session_obj = await Session.create(subject_id=int(create_sesion_in.course_id), id=int(create_sesion_in.resource_id))
+        (student_obj, exists) = await Student.update_or_create(id=int(create_sesion_in.user_id), email=create_sesion_in.user_full_name, password="null")
+        await session_obj.fetch_related("students")
+        await session_obj.students.add(student_obj)
+        await subject_obj.fetch_related("students")
+        await subject_obj.students.add(student_obj)
         await Report.create(session_id = int(create_sesion_in.resource_id), student_id = int(create_sesion_in.user_id), video_web = str(create_sesion_in.webcam_session_id), video_screen = str(create_sesion_in.screen_session_id))
         return {"message" : "Session started"}
+        
+# async def create_moodle_session(create_sesion_in: CreateSessionIn):
+#         # session_obj = await Session.get_or_none(id=int(create_sesion_in.resource_id))
+#         subject_obj = await Subject.create(id=int(create_sesion_in.course_id), name=create_sesion_in.course_title)
+#         # if session_obj is None:
+#         await Session.create(subject_id=int(create_sesion_in.course_id), id=int(create_sesion_in.resource_id))
+#         tudent_obj = await Student.create(id=int(create_sesion_in.user_id), email=create_sesion_in.user_full_name, password="null")
+#         await Report.create(session_id = int(create_sesion_in.resource_id), student_id = int(create_sesion_in.user_id), video_web = str(create_sesion_in.webcam_session_id), video_screen = str(create_sesion_in.screen_session_id))
+#         return {"message" : "Session started"}
