@@ -1,5 +1,3 @@
-import os
-from re import A
 from typing import List
 
 from fastapi.responses import FileResponse
@@ -14,7 +12,6 @@ router = APIRouter(
         tags=["sessions"],
         responses={404: {"model": HTTPNotFoundError}}
 )
-
 
 @router.get("/xlsx/{session_id}")
 async def upload_xlsx(session_id: int):

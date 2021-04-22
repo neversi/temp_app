@@ -1,3 +1,4 @@
+from datetime import timedelta
 import enum
 from os import umask
 from pydantic.errors import TupleLengthError
@@ -20,12 +21,14 @@ class Subject(Model):
         
 class Session(Model):
         subject: fields.ForeignKeyRelation[Subject] = fields.ForeignKeyField('models.Subject', related_name="sessions")
+        students: fields.ManyToManyRelation["Student"] = fields.ManyToManyField('models.Student', relatied_name='sessions', through='student_session')
         proctors: fields.ManyToManyRelation["Proctor"] = fields.ManyToManyField('models.Proctor', related_name="sessions", through='proctor_session')
-        scheduled = fields.DatetimeField()
+        scheduled = fields.DatetimeField(null=True, auto_now_add=True)
         reports: fields.ReverseRelation["Report"]
         
 class Student(Model):
         email = fields.CharField(max_length=255, unique=True)
+        sessions: fields.ManyToManyRelation[Session]
         password = fields.CharField(max_length=255)
         on_exam = fields.BooleanField(default=False)
         subjects: fields.ManyToManyRelation[Subject]
@@ -41,7 +44,7 @@ class Proctor(Model):
                 email: EmailStr
 
 class Report(Model):
-        time_duration = fields.TimeDeltaField()
+        time_duration = fields.TimeDeltaField(default=timedelta(seconds=0))
         video_web = fields.TextField()
         video_screen = fields.TextField()
         trust_point = fields.IntField(default=100)
@@ -68,7 +71,7 @@ class WarningCV(TimestampMixin, Model):
 
         
 Student_Pydantic = pydantic_model_creator(Student, name="Student", exclude=('password',))
-StudentIn_Pydantic = pydantic_model_creator(Student, name="StudentIn", exclude_readonly=True)
+StudentIn_Pydantic = pydantic_model_creator(Student, name="StudentIn")
 
 Subject_Pydantic = pydantic_model_creator(Subject, name="Subject")
 SubjectIn_Pydantic = pydantic_model_creator(Subject, name="SubjectIn")
@@ -77,7 +80,7 @@ Proctor_Pydantic = pydantic_model_creator(Proctor, name="Proctor", exclude=('pas
 ProctorIn_Pydantic = pydantic_model_creator(Proctor, name="ProctorIn", exclude_readonly=True)
 
 Session_Pydantic = pydantic_model_creator(Session, name="Sesion")
-SessionIn_Pydantic = pydantic_model_creator(Session, name="SessionIn", exclude=["id"])
+SessionIn_Pydantic = pydantic_model_creator(Session, name="SessionIn")
 
 Report_Pydantic = pydantic_model_creator(Report, name="Report")
 Warning_Pydantic = pydantic_model_creator(WarningCV, name="Warning")
