@@ -35,7 +35,7 @@ async def create_moodle_session(create_sesion_in: CreateSessionIn):
         session_obj = await Session.get_or_none(id=int(create_sesion_in.resource_id))
         (subject_obj, exists) = await Subject.get_or_create(id=int(create_sesion_in.course_id), name=create_sesion_in.course_title)
         if session_obj is None:
-                session_obj = await Session.create(subject_id=int(create_sesion_in.resource_id))
+                session_obj = await Session.create(subject_id=int(create_sesion_in.course_id), id=int(create_sesion_in.resource_id))
         (student_obj, exists) = await Student.update_or_create(id=int(create_sesion_in.user_id), email=create_sesion_in.user_full_name, password="null")
         await session_obj.fetch_related("students")
         await session_obj.students.add(student_obj)
