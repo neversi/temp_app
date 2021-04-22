@@ -1,10 +1,10 @@
-from typing import List
+from typing import List, Optional
 
 from fastapi.responses import FileResponse
 from fastapi import APIRouter, BackgroundTasks
 from pydantic.main import BaseModel
 from tortoise.contrib.fastapi import HTTPNotFoundError
-from ..models import Report_Pydantic, Session, Report, WarningCV, WarningEnum, Warning_Pydantic
+from ..models import Report_Pydantic, Session, Report, WarningCV, WarningEnum, Warning_Pydantic, Subject, Student
 from ..helpers.xlsx import _create_session_xlsx 
 
 router = APIRouter(
@@ -43,3 +43,26 @@ async def create_warning(session_id: int, report_id: int, warning: Warning_Pydan
         warning_obj = await WarningCV.create(**warning.dict(exclude={'type_warning'}), report_id=report_id)
         return await Warning_Pydantic.from_tortoise_orm(warning_obj)
 
+class CreateSessionIn(BaseModel):
+        user_id: str
+        user_name: str
+        user_role: str
+        course_id: str
+        resource_id: str
+        user_full_name: str
+        course_title: str
+        resource_title: str
+        exam_url: str
+        screen_session_id: Optional[int] = None
+        webcam_session_id: Optional[int] = None
+
+
+@router.post("/create")
+async def create_moodle_session(create_sesion_in: CreateSessionIn):
+        # session_obj = await Session.get_or_none(id=int(create_sesion_in.resource_id))
+        subject_obj = await Subject.create(id=int(create_sesion_in.course_id), name=create_sesion_in.course_title)
+        # if session_obj is None:
+        await Session.create(subject_id=int(create_sesion_in.course_id), id=int(create_sesion_in.resource_id))
+        await Student.create(id=int(create_sesion_in.user_id), email=create_sesion_in.user_full_name, password="null")
+        await Report.create(session_id = int(create_sesion_in.resource_id), student_id = int(create_sesion_in.user_id), video_web = str(create_sesion_in.webcam_session_id), video_screen = str(create_sesion_in.screen_session_id))
+        return {"message" : "Session started"}
