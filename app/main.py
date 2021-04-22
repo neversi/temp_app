@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic.networks import RedisDsn
 from starlette.requests import Request
 from starlette.responses import JSONResponse
-from .routers import students, subjects, proctors, sessions
+from .routers import students, subjects, proctors, sessions,session
 from .config import Config
 from tortoise.contrib.fastapi import register_tortoise
 from .ws import socket_app
@@ -28,6 +28,7 @@ app.include_router(students.router)
 app.include_router(subjects.router)
 app.include_router(proctors.router)
 app.include_router(sessions.router)
+app.include_router(session.router)
 
 app.mount('/ws', socket_app)
 

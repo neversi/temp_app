@@ -6,4 +6,4 @@ aerich init -t app.config.TORTOISE_ORM --location ./app/migrations
 
 aerich init-db
 
-aerich migrate --name Init && aerich upgrade
+#aerich migrate --name Init && aerich upgrade
