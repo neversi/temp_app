@@ -6,7 +6,7 @@ build:
 	docker build -t fastapi:test .
 
 run:
-	docker run --network host --name cv_back -e PORT="7500" fastapi:test 
+	docker run --network host --name cv_back -e PORT="7500" -e WORKERS_PER_CORE="0.5" fastapi:test 
 
 stop-rm:
 	docker stop develop

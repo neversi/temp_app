@@ -38,7 +38,6 @@ async def read_reports(session_id: int):
 
 @router.post("/{session_id}/reports", response_model=Report_Pydantic, deprecated=True)
 async def create_report(session_id: int, report: ReportFull):
-        session_obj = await Session.get(id=session_id)
         report_obj = await Report.create(**report.dict(exclude_unset=True), session_id=session_id)
         return await Report_Pydantic.from_tortoise_orm(report_obj)
 
