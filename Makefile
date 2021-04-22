@@ -17,4 +17,6 @@ re:
 
 re-develop: re develop
 
-re-run: re run 
+re-run:
+	docker rm cv_back
+	docker run --network host --name cv_back -e PORT="7500" fastapi:test 

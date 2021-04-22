@@ -21,7 +21,7 @@ from .redis import redis_cache
         # linger_ms=5)
 
 mgr = socketio.AsyncRedisManager(Config.REDIS_URL)
-sio = socketio.AsyncServer(async_mode='asgi', client_manager=mgr, cors_allowed_origins="*")    
+sio = socketio.AsyncServer(async_mode='asgi', client_manager=mgr, corsed_allow_origins=['*'])    
 socket_app = socketio.ASGIApp(sio)
 
 background_task_started = False
