@@ -26,7 +26,7 @@ socket_app = socketio.ASGIApp(sio)
 
 background_task_started = False
 
-async def background_task():    
+async def background_task() -> Any :     
         while True:
                 await sio.sleep(10)
                 await sio.emit('signal',  {'status': 'ok'})
