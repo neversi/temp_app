@@ -42,6 +42,5 @@ async def create_moodle_session(create_sesion_in: CreateSessionIn):
         await subject_obj.fetch_related("students")
         await subject_obj.students.add(student_obj)
         await session_obj.fetch_related("reports")
-        report_obj = await Report.create(session_id = int(create_sesion_in.resource_id), student_id = int(create_sesion_in.user_id), video_web = str(create_sesion_in.webcam_session_id), video_screen = str(create_sesion_in.screen_session_id))
-        await session_obj.reports.add(report_obj)
+        await Report.create(session_id = int(create_sesion_in.resource_id), student_id = int(create_sesion_in.user_id), video_web = str(create_sesion_in.webcam_session_id), video_screen = str(create_sesion_in.screen_session_id))
         return {"message" : "Session started"}
